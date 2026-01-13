@@ -63,8 +63,9 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.CI_VM_SSH_KEY }}
         run: |
-          echo $SSH_KEY > id_ci
+          printf "%s\n" "$SSH_KEY" > id_ci
           chmod 600 id_ci
+          cat id_ci
 
       - name: Wait for SSH
         run: |
