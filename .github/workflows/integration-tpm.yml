@@ -2,6 +2,9 @@ name: Integration Test with TPM and FDE
 
 on:
   workflow_call:
+    secrets:
+      CI_VM_SSH_KEY:
+        required: true
 
 jobs:
   snapd_integration_test:
