@@ -11,6 +11,9 @@ jobs:
 
       - name: check secret
         run: |
+          echo "repo=${{ github.repository }}"
+          echo "ref=${{ github.ref }}"
+          echo "sha=${{ github.sha }}"
           if [ -z "${{ secrets.CI_VM_SSH_KEY }}" ]; then
             echo "CI_VM_SSH_KEY is EMPTY"
             exit 1
