@@ -9,6 +9,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: check secret
+        run: |
+          if [ -z "${{ secrets.CI_VM_SSH_KEY }}" ]; then
+            echo "CI_VM_SSH_KEY is EMPTY"
+            exit 1
+          else
+            echo "CI_VM_SSH_KEY is present"
+          fi
+
       - name: install dependencies
         run: |
           sudo apt update
