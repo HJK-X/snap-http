@@ -60,12 +60,9 @@ jobs:
             -daemonize
 
       - name: Create SSH key
-        env:
-          SSH_KEY: ${{ secrets.CI_VM_SSH_KEY }}
         run: |
-          printf "%s\n" "$SSH_KEY" > id_ci
+          echo "${{ secrets.CI_VM_SSH_KEY }}" > id_ci
           chmod 600 id_ci
-          cat id_ci
 
       - name: Wait for SSH
         run: |
@@ -80,14 +77,13 @@ jobs:
 
       - name: Run integration test
         run: |
-          ssh -i id_ci -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -p 2222 a@localhost << 'EOF'
-            sudo mkdir /mnt/host
-            sudo mount -t 9p -o trans=virtio hostshare /mnt/host
-            cd /mnt/host/snap-http/
-
-            sudo poetry install
-            sudo poetry run pytest tests/integration_tpm
-          EOF
+          ssh -i id_ci -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -p 2222 a@localhost "
+            sudo mkdir /mnt/host &&
+            sudo mount -t 9p -o trans=virtio hostshare /mnt/host &&
+            cd /mnt/host/snap-http/ &&
+            sudo poetry install &&
+            sudo poetry run pytest tests/integration_tpm &&
+          "
 
       - name: Shutdown VM
         run: |
