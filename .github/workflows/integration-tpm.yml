@@ -12,18 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: check secret
-        run: |
-          echo "repo=${{ github.repository }}"
-          echo "ref=${{ github.ref }}"
-          echo "sha=${{ github.sha }}"
-          if [ -z "${{ secrets.CI_VM_SSH_KEY }}" ]; then
-            echo "CI_VM_SSH_KEY is EMPTY"
-            exit 1
-          else
-            echo "CI_VM_SSH_KEY is present"
-          fi
-
       - name: install dependencies
         run: |
           sudo apt update
@@ -93,11 +81,11 @@ jobs:
       - name: Run integration test
         run: |
           ssh -i id_ci -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -p 2222 a@localhost "
-            sudo mkdir /mnt/host &&
-            sudo mount -t 9p -o trans=virtio hostshare /mnt/host &&
+            sudo mkdir -p /mnt/host &&
+            mountpoint -q /mnt/host || sudo mount -t 9p -o trans=virtio hostshare /mnt/host &&
             cd /mnt/host/snap-http/ &&
             sudo poetry install &&
-            sudo poetry run pytest tests/integration_tpm &&
+            sudo poetry run pytest tests/integration_tpm
           "
 
       - name: Shutdown VM
