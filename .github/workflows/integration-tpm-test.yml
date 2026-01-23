@@ -1,0 +1,13 @@
+name: Integration Test with TPM and FDE
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  snapd_integration_tpm_test:
+    runs-on: ubuntu-latest
+    backend: qemu
+
+go install github.com/canonical/spread/cmd/spread@latest
