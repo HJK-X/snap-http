@@ -22,8 +22,7 @@ jobs:
 
       - name: Cache VM image
         uses: actions/cache@v4
-        env:
-          cache-name: cache-tpm-vm
+        id: cache-tpm-vm
         with:
           path: vm.qcow2
           key: tpm-vm-v1
