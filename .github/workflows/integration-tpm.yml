@@ -17,20 +17,9 @@ jobs:
           sudo apt install -y \
             qemu-system-x86 \
             swtpm \
-            openssh-client \
-            expect \
+            openssh-client
 
-      - name: Cache VM image
-        uses: actions/cache@v4
-        id: cache-tpm-vm
-        with:
-          path: vm.qcow2
-          key: tpm-vm-v1
-          restore-keys: |
-            tpm-vm-
-
-      - if: ${{ steps.cache-tpm-vm.outputs.cache-hit != 'true' }}
-        name: Download VM image
+      - name: Download VM image
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
