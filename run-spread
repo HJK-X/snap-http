@@ -1,0 +1,73 @@
+#!/bin/bash
+set -eu
+
+help() {
+  echo "Usage: $0 [OPTION] [--] [ARGS]"
+  echo
+  echo "Options:"
+  echo "   -m, --mode MODE    - Use selected mode:"
+  echo "                        sru-validation   - Ubuntu SRU validation"
+  echo "                        native-package   - Use native package"
+  echo "   -n, --no-rebuild   - Do not rebuild snapd snap (equivalent to NO_REBUILD=1)"
+  echo "   -d, --download     - Download latest snapd snap built on master (equivalent to DOWNLOAD_SNAPD_SNAP=1)"
+  echo "   --                 - Delimiter for arguments parsed by this script"
+  echo "   ARGS               - Arguments passed to spread"
+  echo
+}
+
+mode=""
+no_rebuild=0
+download=0
+
+while true; do
+  case "${1-}" in
+  --help | -h)
+    help
+    exit 0
+    ;;
+  --mode | -m)
+    shift
+    maybe_mode="$1"
+    shift
+    if [ "$mode" != "" ]; then
+      echo "already using mode $mode"
+      exit 1
+    fi
+
+    case "$maybe_mode" in
+    sru-validation)
+      mode="sru-validation"
+      ;;
+    native-package)
+      mode="native-package"
+      ;;
+    *)
+      echo "unsupported mode: $maybe_mode"
+      exit 1
+      ;;
+    esac
+    ;;
+  --no-rebuild | -n)
+    no_rebuild=1
+    shift
+    ;;
+  --download | -d)
+    download=1
+    shift
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
+set -x
+
+shopt -s nullglob
+
+# Run spread
+exec image-garden.spread "$@"

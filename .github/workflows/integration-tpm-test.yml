@@ -9,5 +9,3 @@ jobs:
   snapd_integration_tpm_test:
     runs-on: ubuntu-latest
     backend: qemu
-
-go install github.com/canonical/spread/cmd/spread@latest

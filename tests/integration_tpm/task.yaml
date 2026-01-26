@@ -1,0 +1,5 @@
+summary: Run integration tests
+execute: |
+  snap version
+  echo "Hello"
+  exit 1

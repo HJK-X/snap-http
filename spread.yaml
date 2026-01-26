@@ -1,0 +1,15 @@
+project: snap-http
+
+path: /snap-http
+backends:
+  qemu:
+    memory: 8G
+    systems:
+      - ubuntu-26.04-64:
+            username: ubuntu
+            password: ubuntu
+
+suites:
+  tests/:
+    summary: Integration Tests with TPM and FDE
+
