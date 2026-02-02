@@ -1,13 +1,52 @@
 project: snap-http
 
-path: /snap-http
+path: /tmp/spread/
 backends:
-  qemu:
-    memory: 8G
+  garden:
+    type: adhoc
+    allocate: |
+      # Spread automatically injects /snap/bin to PATH. When we are
+      # running from the image-garden snap then SPREAD_HOST_PATH is the
+      # original path before such modifications were applied. Snap
+      # applications cannot normally run /snap/bin/* entry-points
+      # successfully so re-set PATH to the original value, as provided by
+      # snapcraft.
+      if [ -n "${SPREAD_HOST_PATH-}" ]; then
+          PATH="${SPREAD_HOST_PATH}"
+      fi
+
+      # Use enough memory to run nested VMs.
+      export QEMU_MEM_OPTION="-m 4096"
+      ARCH="${ARCH:-$(uname -m)}"
+
+      exec image-garden allocate "$SPREAD_SYSTEM"."$ARCH"
+    discard: |
+      # Spread automatically injects /snap/bin to PATH. When we are
+      # running from the image-garden snap then SPREAD_HOST_PATH is the
+      # original path before such modifications were applied. Snap
+      # applications cannot normally run /snap/bin/* entry-points
+      # successfully so re-set PATH to the original value, as provided by
+      # snapcraft.
+      if [ -n "${SPREAD_HOST_PATH-}" ]; then
+          PATH="${SPREAD_HOST_PATH}"
+      fi
+
+      image-garden discard "$SPREAD_SYSTEM_ADDRESS"
     systems:
-      - ubuntu-26.04-64:
-            username: ubuntu
-            password: ubuntu
+      - ubuntu-cloud-26.04:
+          username: ubuntu
+          password: ubuntu
+
+exclude:
+  - .git
+  - "*.qcow2"
+  - "*.iso"
+  - "*.img"
+  - "*.log"
+  - "*.run"
+  - "*.pid"
+  - ".image-garden/*"
+
 
 suites:
   tests/:

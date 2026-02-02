@@ -13,3 +13,4 @@ dist/
 
 *.snap
 *.assert
+.image-garden/
