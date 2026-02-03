@@ -4,7 +4,7 @@ execute: |
   # wget http://launchpadlibrarian.net/845002909/snapd_2.74+ubuntu26.04_amd64.deb
   # sudo apt install ./snapd_*.deb
   # snap version
-  # sudo cloud-init schema --system
+  sudo cloud-init schema --system
   # split -l 500 /var/lib/cloud/instances/nocloud/cloud-config.txt part_
   # ls part_*
   # for f in part_*; do
@@ -13,6 +13,6 @@ execute: |
   # curl -sSL https://install.python-poetry.org | python3 -
   # sudo curl --unix-socket /run/snapd.socket -X POST "http://localhost/v2/system-volumes" -d '{"action":"add-recovery-key", "key-id":"ksjdflsdfj", "keyslots":[{"name":"custom-recovery-key"}]}' -H 'Content-Type: application/json'
   echo "Hello"
-  sudo cat /var/log/installer/autoinstall-user-data
+  sudo ls /var/log/installer
   # sudo /root/.local/bin/poetry install
   # sudo /root/.local/bin/poetry run pytest ./

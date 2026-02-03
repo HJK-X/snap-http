@@ -8,4 +8,12 @@ on:
 jobs:
   snapd_integration_tpm_test:
     runs-on: ubuntu-latest
-    backend: qemu
+    steps:
+        # Access to the snapd socket requires root privileges, so these
+        # tests need to be run as root.
+      - uses: actions/checkout@v4
+
+      - name: install python dependencies
+        run: |
+          sudo snap install image-garden
+          image-garden.spread 
